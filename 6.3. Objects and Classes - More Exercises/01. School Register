@@ -1,0 +1,86 @@
+function solve(input) {
+
+    let listStudents = [];
+    let totalScore = 0;
+    let average = 0;
+    let numStudent = 0;
+
+    for (let i = 0; i < input.length; i++) {
+        let currentStudent = input[i].split(', ');
+        let currentName = currentStudent[0];
+        let splitedName = currentName.split(': ');
+        let name = splitedName[1];
+        let currentGrade = currentStudent[1];
+        let splitedGrade = currentGrade.split(': ');
+        let grade = Number(splitedGrade[1]);
+        let currentScore = currentStudent[2];
+        let splitedScore = currentScore.split(': ');
+        let score = Number(splitedScore[1]);
+
+        let student = {
+            name: name,
+            grade: grade,
+            score: score
+        }
+        if (score > 3) {
+            listStudents.push(student);
+        }
+    }
+    let sorted = listStudents.sort((a, b) => a.grade - b.grade);
+
+    let arr = [];
+    let finish = {};
+    for (student of sorted) {
+        let personGrade = student.grade + 1;
+        if (finish.grade != personGrade) {
+            for (let student of listStudents) {
+                if (student.grade == personGrade - 1) {
+                    numStudent++;
+                    let nameCurrent = student.name;
+                    arr.push(nameCurrent);
+                    let scoreCurrent = student.score;
+                    totalScore += scoreCurrent;
+                }
+            }
+            average = Number(totalScore / numStudent);
+            numStudent = 0;
+            totalScore = 0;
+            finish = {
+                grade: personGrade,
+                list: arr,
+                average: average
+            }
+            console.log(`${finish.grade} Grade`);
+            console.log(`List of students: ${finish.list.join(', ')}`);
+            console.log(`Average annual grade from last year: ${finish.average.toFixed(2)}`);
+            console.log(``);
+            arr = [];
+        }
+    }
+}
+
+// another:
+// function solve(array) {
+//     let schoolRegister = {};
+//     for (let line of array) {
+//       let currentLine = line.split(', ');
+//       let name = currentLine[0].split(': ')[1];
+//       let grade = Number(currentLine[1].split(': ')[1]) + 1;
+//       let score = Number(currentLine[2].split(': ')[1]);
+   
+//       if (score > 3) {
+//         let student = { name, score };
+//         if (!schoolRegister.hasOwnProperty(grade)) {
+//           schoolRegister[grade] = [];
+//         }
+//         schoolRegister[grade].push(student);
+//       }
+//     }
+//     for (let grade in schoolRegister) {
+//       let length = Object.keys(schoolRegister[grade]).length;
+//       let average = (schoolRegister[grade].map((s) => s.score).reduce((a, b) => a + b, 0) / length).toFixed(2);
+//       console.log(`${grade} Grade`);
+//       console.log(`List of students: ${schoolRegister[grade].map((s) => s.name).join(', ')}`);
+//       console.log(`Average annual grade from last year: ${average}\n`);
+//     }
+//   }
